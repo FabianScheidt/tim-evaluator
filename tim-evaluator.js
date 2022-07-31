@@ -256,6 +256,10 @@ class TimEvaluator {
                 }
             },
             legend: {
+                orient: 'vertical',
+                type: 'scroll',
+                height: 200,
+                left: 0,
                 data: []
             },
             xAxis: {
@@ -266,7 +270,10 @@ class TimEvaluator {
                 data: [],
                 inverse: true
             },
-            series: []
+            series: [],
+            grid: {
+                top: 220,
+            }
         };
         
         // Initialize legend and series for each tas
