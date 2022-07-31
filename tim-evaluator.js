@@ -91,6 +91,9 @@ class TimEvaluator {
                 }
             }
             
+            // Retain only the tasks that contain at least one record
+            this.tasks = this.tasks.filter((t) => t.records.length > 0);
+            
             // Sort records by start date
             this.records.sort((a, b) => a.start.getTime() - b.start.getTime());
             
