@@ -71,6 +71,9 @@ class TimEvaluator {
                 this.groups.push(group);
             }
             
+            // Create Archive group
+            this.groups.push(new Group('ARCHIVE', 'Archive'))
+            
             // Read the tasks and records from the file and map them to objects
             for (const taskId of Object.keys(result.tasks)) {
                 const taskSrc = result.tasks[taskId];
