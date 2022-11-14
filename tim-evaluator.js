@@ -13,6 +13,7 @@ class TimEvaluator {
         this.exportWrapper = null;
         this.tabs = [];
         this.visibleTab = 0;
+        this.timeframe = 'week';
         
         this.minGapDuration = 5 * 60 * 1000;
     }
@@ -37,6 +38,8 @@ class TimEvaluator {
         this.fileInput.addEventListener('change', () => this.handleFileChange());
         document.querySelector('#show-evaluation-button').addEventListener('click', () => this.showTab(0));
         document.querySelector('#show-records-button').addEventListener('click', () => this.showTab(1));
+        document.querySelector('#timeframe-week-button').addEventListener('click', () => this.setTimeframe('week'));
+        document.querySelector('#timeframe-day-button').addEventListener('click', () => this.setTimeframe('day'));
         document.querySelector('#export-button').addEventListener('click', () => this.export());
         
         // Initilize the view
@@ -124,6 +127,16 @@ class TimEvaluator {
      */
     showTab(index) {
         this.visibleTab = index;
+        this.updateView();
+    }
+    
+    /**
+     * Sets the timeframe and updates the view
+     *
+     * @param timeframe
+     */
+    setTimeframe(timeframe) {
+        this.timeframe = timeframe;
         this.updateView();
     }
     
@@ -285,18 +298,24 @@ class TimEvaluator {
             data: []
         }));
         
-        // Populate for each week
-        let lastWeek = '';
+        // Populate for each timeframe (day or week)
+        let lastTimeframeLabel = '';
         for (const record of this.records) {
             if (record.disabled || !record.task) {
                 continue;
             }
             
-            const recordWeek = 'KW ' + moment(record.start).format('YYYY-WW');
-            if (recordWeek !== lastWeek) {
-                option.yAxis.data.push(recordWeek);
+            let timeframeLabel = '';
+            if (this.timeframe === 'week') {
+                timeframeLabel = 'KW ' + moment(record.start).format('YYYY-WW');
+            } else if (this.timeframe === 'day') {
+                timeframeLabel = moment(record.start).format('YYYY-MM-DD');
+            }
+            
+            if (timeframeLabel !== lastTimeframeLabel) {
+                option.yAxis.data.push(timeframeLabel);
                 option.series.forEach((series) => series.data.push(0));
-                lastWeek = recordWeek;
+                lastTimeframeLabel = timeframeLabel;
             }
             
             const taskIndex = this.tasks.indexOf(record.task);
